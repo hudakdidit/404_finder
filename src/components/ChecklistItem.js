@@ -25,6 +25,7 @@ export default class ChecklistItem extends Component {
       }
     }
     const style = {
+      position: 'relative',
       margin: '0 0 5px 0',
       padding: '1em',
       background: (this.state.complete ? '#bef2bc' : '#edb8b8'),

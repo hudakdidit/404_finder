@@ -20616,27 +20616,46 @@
 	        );
 	      };
 
+	      var navbar_style = {
+	        position: 'fixed',
+	        top: 0,
+	        left: 0,
+	        right: 0,
+	        width: '100%',
+	        zIndex: 5,
+	        background: 'white',
+	        padding: '10px'
+	      };
+
 	      return _react2['default'].createElement(
 	        'div',
 	        null,
 	        _react2['default'].createElement(
-	          'h1',
-	          null,
-	          site,
-	          ' Errors: ',
-	          complete,
-	          ' of ',
-	          total,
-	          ' resolved.'
+	          'div',
+	          { style: navbar_style },
+	          _react2['default'].createElement(
+	            'h1',
+	            null,
+	            site,
+	            ' Errors: ',
+	            complete,
+	            ' of ',
+	            total,
+	            ' resolved.'
+	          ),
+	          _react2['default'].createElement(_ChecklistSearch2['default'], { query: query, results: this.countResults() }),
+	          _react2['default'].createElement(
+	            'p',
+	            null,
+	            total - complete,
+	            ' left to resolve.'
+	          )
 	        ),
-	        _react2['default'].createElement(_ChecklistSearch2['default'], { query: query, results: this.countResults() }),
 	        _react2['default'].createElement(
-	          'p',
-	          null,
-	          total - complete,
-	          ' left to resolve.'
-	        ),
-	        keys.map(createItem)
+	          'div',
+	          { style: { paddingTop: '250px' } },
+	          keys.map(createItem)
+	        )
 	      );
 	    }
 	  }, {
@@ -20736,6 +20755,7 @@
 	        }
 	      };
 	      var style = {
+	        position: 'relative',
 	        margin: '0 0 5px 0',
 	        padding: '1em',
 	        background: this.state.complete ? '#bef2bc' : '#edb8b8',

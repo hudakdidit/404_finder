@@ -6,6 +6,7 @@ Crawler      = require "simplecrawler"
 moment       = require 'moment'
 log_path     = "test/site-crawler/logs/"
 config       = require('./lib/parseConfig')()
+mkdirp       = require 'mkdirp'
 
 
 #--------------------------------------------------------
@@ -82,8 +83,10 @@ SiteCrawler =
     if @errors > 0
       console.log chalk.white.bgMagenta "\n #{@errors} Total Errors"
 
-    fs.writeFile "#{__dirname}/log/#{config.name}.json", JSON.stringify(@errorsObj), (err) ->
+    mkdirp __dirname + '/log', (err) =>
       throw err if err isnt null
+      fs.writeFile "#{__dirname}/log/#{config.name}.json", JSON.stringify(@errorsObj), (err) ->
+        throw err if err isnt null
 
 
 module.exports = SiteCrawler
