@@ -4,8 +4,8 @@ fs           = require 'fs'
 chalk        = require 'chalk'
 Crawler      = require "simplecrawler"
 moment       = require 'moment'
-site_url     = "https://www.ctl.io"
 log_path     = "test/site-crawler/logs/"
+config       = require('./lib/parseConfig')()
 
 
 #--------------------------------------------------------
@@ -15,6 +15,7 @@ log_path     = "test/site-crawler/logs/"
 SiteCrawler =
   remaining: null
   init: ->
+    console.log(config)
     @errorsObj = {}
     @startTimer()
     @errors = 0
@@ -27,7 +28,7 @@ SiteCrawler =
     , 1000
 
   startCrawler: ->
-    @crawler = Crawler.crawl site_url
+    @crawler = Crawler.crawl config.url
     @crawler.parseScriptTags = false
     @crawler.parseHTMLComments = false
     @crawler
@@ -70,22 +71,19 @@ SiteCrawler =
         progress_bar += "="
       else
         progress_bar += " "
-    progress = "Crawling #{site_url} [#{progress_bar}] #{(percent_complete * 100).toFixed(2)}%"
-    _log chalk.white.bgCyan progress
+    progress = "Crawling #{config.url} [#{progress_bar}] #{(percent_complete * 100).toFixed(2)}%"
+    _log chalk.cyan progress
 
   finish: ->
     _log.clear()
     clearInterval @timer
-    duration = "#{@duration / 60} minutes"
-    console.log chalk.white.bgGreen "\n Site Crawler Completed in #{duration}"
+    duration = "#{(@duration / 60).toFixed(2)} minutes"
+    console.log chalk.white.bgCyan "\n Site Crawler Completed in #{duration}"
     
     if @errors > 0
       console.log chalk.white.bgMagenta "\n #{@errors} Total Errors"
-    
-    fs.appendFile @current_logfile, "Site Crawler Completed in #{duration} with #{@errors} errors found.\n\n", (err) =>
-      throw err if err isnt null
 
-    fs.writeFile "#{"test/site-crawler/logs/"}master.json", JSON.stringify(@errorsObj), (err) ->
+    fs.writeFile "#{__dirname}/log/#{config.name}.json", JSON.stringify(@errorsObj), (err) ->
       throw err if err isnt null
 
 

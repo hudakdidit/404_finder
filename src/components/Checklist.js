@@ -3,7 +3,7 @@ import ChecklistItem from './ChecklistItem';
 
 export default class Checklist extends Component {
   render() {
-    const {items, total, complete} = this.props;
+    const {items, total, complete, site} = this.props;
     const keys = Object.keys(this.props.items);
     const createItem = function(key, index) {
       const item = items[key];
@@ -16,7 +16,7 @@ export default class Checklist extends Component {
     }
     return (
       <div>
-        <h1>404 Errors: {complete} of {total} resolved.</h1>
+        <h1>{site} Errors: {complete} of {total} resolved.</h1>
         <p>{total - complete} left to resolve.</p>
         {keys.map(createItem)}
       </div>

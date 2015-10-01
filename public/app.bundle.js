@@ -56,11 +56,18 @@
 
 	var _componentsApp2 = _interopRequireDefault(_componentsApp);
 
-	$.get('db.json').done(function (data) {
-	  _react2['default'].render(_react2['default'].createElement(_componentsApp2['default'], { initialDB: data }), $('#checklist')[0]);
+	var site = null;
+
+	$.get('/api').done(function (data) {
+	  site = data.url;
+	  $.get(data.name + '_db.json').done(function (data) {
+	    _react2['default'].render(_react2['default'].createElement(_componentsApp2['default'], { site: site, initialDB: data }), $('#checklist')[0]);
+	  }).fail(function (err) {
+	    console.log(err);
+	    $('#checklist').text('Database could not be found.');
+	  });
 	}).fail(function (err) {
-	  console.log(err);
-	  $('#checklist').text('Database could not be found.');
+	  console.log('Cannot get /api');
 	});
 
 /***/ },
@@ -20449,6 +20456,8 @@
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -20495,7 +20504,7 @@
 	  _createClass(App, [{
 	    key: 'render',
 	    value: function render() {
-	      return _react2['default'].createElement(_Checklist2['default'], this.state);
+	      return _react2['default'].createElement(_Checklist2['default'], _extends({ site: this.props.site }, this.state));
 	    }
 	  }, {
 	    key: 'componentDidMount',
@@ -20581,6 +20590,7 @@
 	      var items = _props.items;
 	      var total = _props.total;
 	      var complete = _props.complete;
+	      var site = _props.site;
 
 	      var keys = Object.keys(this.props.items);
 	      var createItem = function createItem(key, index) {
@@ -20601,7 +20611,8 @@
 	        _react2['default'].createElement(
 	          'h1',
 	          null,
-	          '404 Errors: ',
+	          site,
+	          ' Errors: ',
 	          complete,
 	          ' of ',
 	          total,

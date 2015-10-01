@@ -17,7 +17,7 @@ var dev = function() {
 }
 
 var crawl = function() {
-  crawler.init();
+  return crawler.init();
 }
 
 

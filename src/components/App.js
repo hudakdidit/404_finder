@@ -14,7 +14,7 @@ export default class App extends Component {
   }
 
   render() {
-    return <Checklist {...this.state} />;
+    return <Checklist site={this.props.site} {...this.state} />;
   }
 
   componentDidMount() {
