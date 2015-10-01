@@ -20574,6 +20574,10 @@
 
 	var _ChecklistItem2 = _interopRequireDefault(_ChecklistItem);
 
+	var _ChecklistSearch = __webpack_require__(177);
+
+	var _ChecklistSearch2 = _interopRequireDefault(_ChecklistSearch);
+
 	var Checklist = (function (_Component) {
 	  _inherits(Checklist, _Component);
 
@@ -20586,15 +20590,21 @@
 	  _createClass(Checklist, [{
 	    key: 'render',
 	    value: function render() {
+	      var _items = undefined;
 	      var _props = this.props;
 	      var items = _props.items;
 	      var total = _props.total;
 	      var complete = _props.complete;
 	      var site = _props.site;
+	      var search = _props.search;
+	      var results = _props.results;
+	      var query = _props.query;
 
-	      var keys = Object.keys(this.props.items);
+	      _items = search ? results : items;
+
+	      var keys = Object.keys(_items);
 	      var createItem = function createItem(key, index) {
-	        var item = items[key];
+	        var item = _items[key];
 	        var refs = item.refs;
 	        var complete = item.complete;
 	        var notes = item.notes;
@@ -20605,6 +20615,7 @@
 	          _react2['default'].createElement(_ChecklistItem2['default'], { link: key, complete: complete, notes: item.notes, refs: refs })
 	        );
 	      };
+
 	      return _react2['default'].createElement(
 	        'div',
 	        null,
@@ -20618,6 +20629,7 @@
 	          total,
 	          ' resolved.'
 	        ),
+	        _react2['default'].createElement(_ChecklistSearch2['default'], { query: query, results: this.countResults() }),
 	        _react2['default'].createElement(
 	          'p',
 	          null,
@@ -20626,6 +20638,19 @@
 	        ),
 	        keys.map(createItem)
 	      );
+	    }
+	  }, {
+	    key: 'countResults',
+	    value: function countResults() {
+	      var _props2 = this.props;
+	      var search = _props2.search;
+	      var results = _props2.results;
+
+	      if (search) {
+	        return Object.keys(results).length;
+	      } else {
+	        return false;
+	      }
 	    }
 	  }]);
 
@@ -20674,7 +20699,7 @@
 
 	    _get(Object.getPrototypeOf(ChecklistItem.prototype), 'constructor', this).call(this);
 	    this.state = {
-	      complete: complete !== undefined || complete === 'true' ? true : false,
+	      complete: complete !== undefined && complete === 'true' ? true : false,
 	      editing: false,
 	      notes: notes !== undefined ? notes : ''
 	    };
@@ -20893,6 +20918,11 @@
 	    key: 'updateItems',
 	    value: function updateItems(items) {
 	      this.dispatch(items);
+	    }
+	  }, {
+	    key: 'filterItems',
+	    value: function filterItems(search) {
+	      this.dispatch(search);
 	    }
 	  }]);
 
@@ -22460,10 +22490,14 @@
 	  function ChecklistStore() {
 	    _classCallCheck(this, ChecklistStore);
 
+	    this.search = false;
+	    this.query = '';
+	    this.results = {};
 	    this.items = {};
 	    this.bindListeners({
 	      handleUpdateItem: _ChecklistActions2['default'].UPDATE_ITEM,
-	      handleUpdateItems: _ChecklistActions2['default'].UPDATE_ITEMS
+	      handleUpdateItems: _ChecklistActions2['default'].UPDATE_ITEMS,
+	      filterItems: _ChecklistActions2['default'].FILTER_ITEMS
 	    });
 	  }
 
@@ -22477,6 +22511,28 @@
 	    key: 'handleUpdateItems',
 	    value: function handleUpdateItems(items) {
 	      this.items = items;
+	    }
+	  }, {
+	    key: 'filterItems',
+	    value: function filterItems(search) {
+	      var _this = this;
+
+	      if (search === '') {
+	        this.search = false;
+	      } else {
+	        (function () {
+	          var results = {};
+	          var foundUrls = Object.keys(_this.items).filter(function (url) {
+	            return url.indexOf(search) > -1;
+	          });
+	          foundUrls.map(function (url) {
+	            return results[url] = _this.items[url];
+	          });
+	          _this.query = search;
+	          _this.search = true;
+	          _this.results = results;
+	        })();
+	      }
 	    }
 	  }]);
 
@@ -22531,6 +22587,85 @@
 		return to;
 	};
 
+
+/***/ },
+/* 177 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _libChecklistActions = __webpack_require__(161);
+
+	var _libChecklistActions2 = _interopRequireDefault(_libChecklistActions);
+
+	var ChecklistSearch = (function (_Component) {
+	  _inherits(ChecklistSearch, _Component);
+
+	  function ChecklistSearch() {
+	    _classCallCheck(this, ChecklistSearch);
+
+	    _get(Object.getPrototypeOf(ChecklistSearch.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  _createClass(ChecklistSearch, [{
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var results = _props.results;
+	      var query = _props.query;
+
+	      var style = {
+	        display: 'block',
+	        lineHeight: '30px',
+	        height: '30px',
+	        padding: '0 10px'
+	      };
+	      var total = !results ? '' : results + ' results found for ' + query + '.';
+	      return _react2['default'].createElement(
+	        'div',
+	        null,
+	        _react2['default'].createElement('input', { style: style, placeholder: 'Search', onChange: this._search.bind(this) }),
+	        _react2['default'].createElement(
+	          'p',
+	          null,
+	          _react2['default'].createElement(
+	            'strong',
+	            null,
+	            total
+	          )
+	        )
+	      );
+	    }
+	  }, {
+	    key: '_search',
+	    value: function _search(e) {
+	      _libChecklistActions2['default'].filterItems(e.target.value);
+	    }
+	  }]);
+
+	  return ChecklistSearch;
+	})(_react.Component);
+
+	exports['default'] = ChecklistSearch;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

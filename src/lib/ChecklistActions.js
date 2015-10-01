@@ -6,6 +6,9 @@ class ChecklistActions {
   updateItems(items) {
     this.dispatch(items);
   }
+  filterItems(search) {
+    this.dispatch(search);
+  }
 }
 
 export default alt.createActions(ChecklistActions);

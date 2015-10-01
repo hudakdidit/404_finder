@@ -6,7 +6,7 @@ export default class ChecklistItem extends Component {
     const {complete, notes} = props;
     super();
     this.state = {
-      complete: (complete !== undefined || complete === 'true' ? true : false),
+      complete: (complete !== undefined && complete === 'true' ? true : false),
       editing: false,
       notes: (notes !== undefined ? notes : '')
     }
