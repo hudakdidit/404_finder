@@ -32,7 +32,7 @@ export default class ChecklistItem extends Component {
     }
     return (
       <div style={style}>
-        <input type="checkbox" onChange={this._handleChange.bind(this)} checked={this.state.complete}/>
+        <input type="checkbox" onChange={this._handleToggleCheckbox.bind(this)} checked={this.state.complete}/>
         <label>{link}</label>
         {referrers()}
         {this._notes()}
@@ -54,11 +54,11 @@ export default class ChecklistItem extends Component {
     }
   }
 
-  _handleChange(e) {
+  _handleToggleCheckbox(e) {
     var complete = e.target.checked;
-    this.setState({complete: complete})
-    console.log('API UPDATE ACTION')
-    // updateItem(this.props.link, complete, this.props.update);
+    this.setState({complete: complete}, function(){
+      API.updateItem({index: this.props.link, item: {complete: this.state.complete}});
+    });
   }
 
   _toggleEditing() {
@@ -70,7 +70,6 @@ export default class ChecklistItem extends Component {
   }
 
   _saveNotes() {
-    console.log(API);
     API.updateItem({index: this.props.link, item: {notes: this.state.notes}});
     this._toggleEditing();
   }
@@ -78,7 +77,7 @@ export default class ChecklistItem extends Component {
   _deleteNote() {
     this.setState({notes: ''}, function() {
       console.log('API UPDATE ACTION')
-      // updateItem(this.props.link, this.state.notes, this.props.update);
+      API.updateItem({index: this.props.link, item: {notes: this.state.notes}});
     });
   }
 }

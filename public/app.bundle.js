@@ -20467,11 +20467,11 @@
 
 	var _Checklist2 = _interopRequireDefault(_Checklist);
 
-	var _libChecklistStore = __webpack_require__(160);
+	var _libChecklistStore = __webpack_require__(175);
 
 	var _libChecklistStore2 = _interopRequireDefault(_libChecklistStore);
 
-	var _libChecklistActions = __webpack_require__(174);
+	var _libChecklistActions = __webpack_require__(161);
 
 	var _libChecklistActions2 = _interopRequireDefault(_libChecklistActions);
 
@@ -20610,7 +20610,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _libAPI = __webpack_require__(175);
+	var _libAPI = __webpack_require__(160);
 
 	var _libAPI2 = _interopRequireDefault(_libAPI);
 
@@ -20670,7 +20670,7 @@
 	      return _react2['default'].createElement(
 	        'div',
 	        { style: style },
-	        _react2['default'].createElement('input', { type: 'checkbox', onChange: this._handleChange.bind(this), checked: this.state.complete }),
+	        _react2['default'].createElement('input', { type: 'checkbox', onChange: this._handleToggleCheckbox.bind(this), checked: this.state.complete }),
 	        _react2['default'].createElement(
 	          'label',
 	          null,
@@ -20728,12 +20728,12 @@
 	      }
 	    }
 	  }, {
-	    key: '_handleChange',
-	    value: function _handleChange(e) {
+	    key: '_handleToggleCheckbox',
+	    value: function _handleToggleCheckbox(e) {
 	      var complete = e.target.checked;
-	      this.setState({ complete: complete });
-	      console.log('API UPDATE ACTION');
-	      // updateItem(this.props.link, complete, this.props.update);
+	      this.setState({ complete: complete }, function () {
+	        _libAPI2['default'].updateItem({ index: this.props.link, item: { complete: this.state.complete } });
+	      });
 	    }
 	  }, {
 	    key: '_toggleEditing',
@@ -20748,7 +20748,6 @@
 	  }, {
 	    key: '_saveNotes',
 	    value: function _saveNotes() {
-	      console.log(_libAPI2['default']);
 	      _libAPI2['default'].updateItem({ index: this.props.link, item: { notes: this.state.notes } });
 	      this._toggleEditing();
 	    }
@@ -20757,7 +20756,7 @@
 	    value: function _deleteNote() {
 	      this.setState({ notes: '' }, function () {
 	        console.log('API UPDATE ACTION');
-	        // updateItem(this.props.link, this.state.notes, this.props.update);
+	        _libAPI2['default'].updateItem({ index: this.props.link, item: { notes: this.state.notes } });
 	      });
 	    }
 	  }]);
@@ -20784,42 +20783,29 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _alt = __webpack_require__(161);
+	var _libChecklistActions = __webpack_require__(161);
 
-	var _alt2 = _interopRequireDefault(_alt);
+	var _libChecklistActions2 = _interopRequireDefault(_libChecklistActions);
 
-	var _ChecklistActions = __webpack_require__(174);
-
-	var _ChecklistActions2 = _interopRequireDefault(_ChecklistActions);
-
-	var ChecklistStore = (function () {
-	  function ChecklistStore() {
-	    _classCallCheck(this, ChecklistStore);
-
-	    this.items = {};
-	    this.bindListeners({
-	      handleUpdateItem: _ChecklistActions2['default'].UPDATE_ITEM,
-	      handleUpdateItems: _ChecklistActions2['default'].UPDATE_ITEMS
-	    });
+	var API = (function () {
+	  function API() {
+	    _classCallCheck(this, API);
 	  }
 
-	  _createClass(ChecklistStore, [{
-	    key: 'handleUpdateItem',
-	    value: function handleUpdateItem(item) {
-	      console.log(item);
-	    }
-	  }, {
-	    key: 'handleUpdateItems',
-	    value: function handleUpdateItems(items) {
-	      this.items = items;
+	  _createClass(API, [{
+	    key: 'updateItem',
+	    value: function updateItem(item) {
+	      _libChecklistActions2['default'].updateItem(item);
+	      $.post('/update', item).done(function (data) {
+	        _libChecklistActions2['default'].updateItems(JSON.parse(data));
+	      });
 	    }
 	  }]);
 
-	  return ChecklistStore;
+	  return API;
 	})();
 
-	exports['default'] = ChecklistStore;
-	exports['default'] = _alt2['default'].createStore(ChecklistStore, 'ChecklistStore');
+	exports['default'] = new API();
 	module.exports = exports['default'];
 
 /***/ },
@@ -20832,9 +20818,52 @@
 	  value: true
 	});
 
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
 	var _alt = __webpack_require__(162);
+
+	var _alt2 = _interopRequireDefault(_alt);
+
+	var ChecklistActions = (function () {
+	  function ChecklistActions() {
+	    _classCallCheck(this, ChecklistActions);
+	  }
+
+	  _createClass(ChecklistActions, [{
+	    key: 'updateItem',
+	    value: function updateItem(item) {
+	      this.dispatch(item);
+	    }
+	  }, {
+	    key: 'updateItems',
+	    value: function updateItems(items) {
+	      this.dispatch(items);
+	    }
+	  }]);
+
+	  return ChecklistActions;
+	})();
+
+	exports['default'] = _alt2['default'].createActions(ChecklistActions);
+	module.exports = exports['default'];
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _alt = __webpack_require__(163);
 
 	var _alt2 = _interopRequireDefault(_alt);
 
@@ -20842,7 +20871,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 162 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global window*/
@@ -20867,25 +20896,25 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _flux = __webpack_require__(163);
+	var _flux = __webpack_require__(164);
 
-	var _utilsStateFunctions = __webpack_require__(166);
+	var _utilsStateFunctions = __webpack_require__(167);
 
 	var StateFunctions = _interopRequireWildcard(_utilsStateFunctions);
 
-	var _utilsFunctions = __webpack_require__(167);
+	var _utilsFunctions = __webpack_require__(168);
 
 	var fn = _interopRequireWildcard(_utilsFunctions);
 
-	var _store = __webpack_require__(168);
+	var _store = __webpack_require__(169);
 
 	var store = _interopRequireWildcard(_store);
 
-	var _utilsAltUtils = __webpack_require__(169);
+	var _utilsAltUtils = __webpack_require__(170);
 
 	var utils = _interopRequireWildcard(_utilsAltUtils);
 
-	var _actions = __webpack_require__(173);
+	var _actions = __webpack_require__(174);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -21169,7 +21198,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 163 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21181,11 +21210,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(164)
+	module.exports.Dispatcher = __webpack_require__(165)
 
 
 /***/ },
-/* 164 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21202,7 +21231,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(165);
+	var invariant = __webpack_require__(166);
 
 	var _lastID = 1;
 	var _prefix = 'ID_';
@@ -21441,7 +21470,7 @@
 
 
 /***/ },
-/* 165 */
+/* 166 */
 /***/ function(module, exports) {
 
 	/**
@@ -21500,7 +21529,7 @@
 
 
 /***/ },
-/* 166 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21515,7 +21544,7 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _utilsFunctions = __webpack_require__(167);
+	var _utilsFunctions = __webpack_require__(168);
 
 	var fn = _interopRequireWildcard(_utilsFunctions);
 
@@ -21577,7 +21606,7 @@
 	}
 
 /***/ },
-/* 167 */
+/* 168 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21618,7 +21647,7 @@
 	}
 
 /***/ },
-/* 168 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21643,19 +21672,19 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _utilsAltUtils = __webpack_require__(169);
+	var _utilsAltUtils = __webpack_require__(170);
 
 	var utils = _interopRequireWildcard(_utilsAltUtils);
 
-	var _utilsFunctions = __webpack_require__(167);
+	var _utilsFunctions = __webpack_require__(168);
 
 	var fn = _interopRequireWildcard(_utilsFunctions);
 
-	var _AltStore = __webpack_require__(170);
+	var _AltStore = __webpack_require__(171);
 
 	var _AltStore2 = _interopRequireDefault(_AltStore);
 
-	var _StoreMixin = __webpack_require__(172);
+	var _StoreMixin = __webpack_require__(173);
 
 	var _StoreMixin2 = _interopRequireDefault(_StoreMixin);
 
@@ -21797,7 +21826,7 @@
 	}
 
 /***/ },
-/* 169 */
+/* 170 */
 /***/ function(module, exports) {
 
 	/*eslint-disable*/
@@ -21862,7 +21891,7 @@
 	function NoopClass() {}
 
 /***/ },
-/* 170 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21879,11 +21908,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _utilsFunctions = __webpack_require__(167);
+	var _utilsFunctions = __webpack_require__(168);
 
 	var fn = _interopRequireWildcard(_utilsFunctions);
 
-	var _transmitter = __webpack_require__(171);
+	var _transmitter = __webpack_require__(172);
 
 	var _transmitter2 = _interopRequireDefault(_transmitter);
 
@@ -22011,7 +22040,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 171 */
+/* 172 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22044,7 +22073,7 @@
 	module.exports = transmitter;
 
 /***/ },
-/* 172 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22057,11 +22086,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _transmitter = __webpack_require__(171);
+	var _transmitter = __webpack_require__(172);
 
 	var _transmitter2 = _interopRequireDefault(_transmitter);
 
-	var _utilsFunctions = __webpack_require__(167);
+	var _utilsFunctions = __webpack_require__(168);
 
 	var fn = _interopRequireWildcard(_utilsFunctions);
 
@@ -22252,7 +22281,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 173 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22269,11 +22298,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _utilsFunctions = __webpack_require__(167);
+	var _utilsFunctions = __webpack_require__(168);
 
 	var fn = _interopRequireWildcard(_utilsFunctions);
 
-	var _utilsAltUtils = __webpack_require__(169);
+	var _utilsAltUtils = __webpack_require__(170);
 
 	var utils = _interopRequireWildcard(_utilsAltUtils);
 
@@ -22349,49 +22378,6 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 174 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _alt = __webpack_require__(161);
-
-	var _alt2 = _interopRequireDefault(_alt);
-
-	var ChecklistActions = (function () {
-	  function ChecklistActions() {
-	    _classCallCheck(this, ChecklistActions);
-	  }
-
-	  _createClass(ChecklistActions, [{
-	    key: 'updateItem',
-	    value: function updateItem(item) {
-	      this.dispatch(item);
-	    }
-	  }, {
-	    key: 'updateItems',
-	    value: function updateItems(items) {
-	      this.dispatch(items);
-	    }
-	  }]);
-
-	  return ChecklistActions;
-	})();
-
-	exports['default'] = _alt2['default'].createActions(ChecklistActions);
-	module.exports = exports['default'];
-
-/***/ },
 /* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -22407,30 +22393,93 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _libChecklistActions = __webpack_require__(174);
+	var _alt = __webpack_require__(162);
 
-	var _libChecklistActions2 = _interopRequireDefault(_libChecklistActions);
+	var _alt2 = _interopRequireDefault(_alt);
 
-	var API = (function () {
-	  function API() {
-	    _classCallCheck(this, API);
+	var _ChecklistActions = __webpack_require__(161);
+
+	var _ChecklistActions2 = _interopRequireDefault(_ChecklistActions);
+
+	var _objectAssign = __webpack_require__(176);
+
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+
+	var ChecklistStore = (function () {
+	  function ChecklistStore() {
+	    _classCallCheck(this, ChecklistStore);
+
+	    this.items = {};
+	    this.bindListeners({
+	      handleUpdateItem: _ChecklistActions2['default'].UPDATE_ITEM,
+	      handleUpdateItems: _ChecklistActions2['default'].UPDATE_ITEMS
+	    });
 	  }
 
-	  _createClass(API, [{
-	    key: 'updateItem',
-	    value: function updateItem(item) {
-	      _libChecklistActions2['default'].updateItem(item);
-	      $.post('/update', item).done(function (data) {
-	        _libChecklistActions2['default'].updateItems(JSON.parse(data));
-	      });
+	  _createClass(ChecklistStore, [{
+	    key: 'handleUpdateItem',
+	    value: function handleUpdateItem(obj) {
+	      var item = this.items[obj.index];
+	      item = (0, _objectAssign2['default'])(item, obj.item);
+	    }
+	  }, {
+	    key: 'handleUpdateItems',
+	    value: function handleUpdateItems(items) {
+	      this.items = items;
 	    }
 	  }]);
 
-	  return API;
+	  return ChecklistStore;
 	})();
 
-	exports['default'] = new API();
+	exports['default'] = ChecklistStore;
+	exports['default'] = _alt2['default'].createStore(ChecklistStore, 'ChecklistStore');
 	module.exports = exports['default'];
+
+/***/ },
+/* 176 */
+/***/ function(module, exports) {
+
+	/* eslint-disable no-unused-vars */
+	'use strict';
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+
+		return to;
+	};
+
 
 /***/ }
 /******/ ]);

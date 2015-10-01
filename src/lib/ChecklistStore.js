@@ -1,5 +1,6 @@
 import alt from './alt';
 import ChecklistActions from './ChecklistActions';
+import objectAssign from 'object-assign';
 
 export default class ChecklistStore {
   constructor() {
@@ -10,8 +11,9 @@ export default class ChecklistStore {
     })
   }
 
-  handleUpdateItem(item) {
-    console.log(item);
+  handleUpdateItem(obj) {
+    let item = this.items[obj.index]
+    item = objectAssign(item, obj.item);
   }
 
   handleUpdateItems(items) {

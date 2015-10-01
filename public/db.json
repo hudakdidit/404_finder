@@ -2,12 +2,15 @@
 	"https://www.ctl.io/apple-touch-icon-152x120.png": {
 		"refs": [
 			"https://www.ctl.io/"
-		]
+		],
+		"notes": "a note about another thing",
+		"complete": "false"
 	},
 	"https://www.ctl.io/assets/images/loading.svg": {
 		"refs": [
 			"https://www.ctl.io/assets/css/main.css"
-		]
+		],
+		"notes": "this thing has a note"
 	},
 	"https://www.ctl.io/knowledge-base/network/centurylink-cloud-ids-idp-platform-faq/%20/": {
 		"refs": [

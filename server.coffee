@@ -14,25 +14,12 @@ app.get '/', (req, res) -> res.sendfile __dirname + '/public/index.html'
 
 app.post '/update', (req, res) ->
   res.setHeader('Content-Type', 'text/plain')
-  {key, item} = req.body
-  for prop in item
-    _DB[key][prop] = item[key]
-  updateDB req.body.key, {key: 'completed', val: req.body.complete}, (db) ->
-    res.end(JSON.stringify(db))
-
-
-app.post '/complete', (req, res) ->
-  res.setHeader('Content-Type', 'text/plain')
-  updateDB req.body.key, {key: 'completed', val: req.body.complete}, (db) ->
-    res.end(JSON.stringify(db))
-
-app.post '/addnotes', (req, res) ->
-  res.setHeader('Content-Type', 'text/plain')
-  updateDB req.body.key, {key: 'notes', val: req.body.notes}, (db) ->
+  {index, item} = req.body
+  updateDB index, item, (db) ->
     res.end(JSON.stringify(db))
 
 updateDB = (key, obj, cb) ->
-  _DB[key][obj.key] = obj.val
+  _DB[key] = _.assign(_DB[key], obj)
   fs.writeFile __dirname + '/public/db.json', JSON.stringify(_DB, null, '\t'), (err) =>
     throw err if err isnt null
     cb(_DB)
@@ -48,7 +35,7 @@ module.exports = ->
   fs.exists __dirname + '/public/db.json', (exists) ->
     if exists
       db = require __dirname + '/public/db.json'
-      db = _.assign(db, crawl_data)
+      db = _.assign(crawl_data, db)
       writeDB db, startServer
     else
       writeDB crawl_data, startServer
