@@ -1,13 +1,20 @@
 import React, {Component} from 'react';
 import API from '../lib/API';
 
+const colors = {
+  complete: '#bef2bc',
+  incomplete: '#edb8b8',
+  nonissue: '#00b9e7'
+}
+
 export default class ChecklistItem extends Component {
   constructor(props) {
-    const {complete, notes} = props;
+    const {complete, notes, issue} = props;
     super();
     this.state = {
       complete: (complete !== undefined && complete === 'true' ? true : false),
       editing: false,
+      issue: (issue !== undefined && issue === 'false' ? false : true),
       notes: (notes !== undefined ? notes : '')
     }
   }
@@ -24,17 +31,29 @@ export default class ChecklistItem extends Component {
         return <div><strong>Referrers:</strong>{refs.map(referrer)}</div>
       }
     }
-    const style = {
+
+    let style = {
       position: 'relative',
       margin: '0 0 5px 0',
       padding: '1em',
-      background: (this.state.complete ? '#bef2bc' : '#edb8b8'),
+      background: (this.state.complete ? colors.complete : colors.incomplete),
       overflowX: 'auto'
     }
+
+    if(!this.state.issue) {
+      style.background = colors.nonissue;
+    }
+
     return (
       <div style={style}>
-        <input type="checkbox" onChange={this._handleToggleCheckbox.bind(this)} checked={this.state.complete}/>
-        <label>{link}</label>
+        <div>
+          <input type="checkbox" onChange={this._toggleIssue.bind(this)} checked={this.state.complete}/>
+          <label>Resolved</label>
+          &nbsp;&nbsp;&nbsp;
+          <input type="checkbox" onChange={this._toggleIssue.bind(this)} checked={!this.state.issue}/>
+          <label>Not an issue</label>
+        </div>
+        <h2>{link}</h2>
         {referrers()}
         {this._notes()}
       </div>
@@ -55,6 +74,13 @@ export default class ChecklistItem extends Component {
     } else {
       return <button onClick={this._toggleEditing.bind(this)}>Add notes</button>;
     }
+  }
+
+  _toggleIssue(e) {
+    var issue = e.target.checked;
+    this.setState({issue: !this.state.issue}, function(){
+      API.updateItem({index: this.props.link, item: {issue: this.state.issue}});
+    });
   }
 
   _handleToggleCheckbox(e) {

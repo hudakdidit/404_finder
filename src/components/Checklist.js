@@ -11,10 +11,10 @@ export default class Checklist extends Component {
     let keys = Object.keys(_items);
     const createItem = function(key, index) {
       const item = _items[key];
-      const {refs, complete, notes} = item;
+      const {refs, complete, notes, issue} = item;
       return (
         <div key={index + 'brokenlink'}>
-          <ChecklistItem link={key} complete={complete} notes={item.notes} refs={refs}/> 
+          <ChecklistItem link={key} complete={complete} notes={item.notes} refs={refs} issue={issue}/> 
         </div>
       );
     }

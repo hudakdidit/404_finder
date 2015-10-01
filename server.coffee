@@ -46,7 +46,7 @@ readDB = ->
   crawl_data = require __dirname + "/log/#{name}.json"
   fs.exists __dirname + "/public/#{name}_db.json", (exists) ->
     if exists
-      db = require __dirname + "/log/#{name}.json"
+      db = require __dirname + "/public/#{name}_db.json"
       checkUpdate(crawl_data, db, startServer)
     else
       writeDB crawl_data, startServer

@@ -20608,11 +20608,12 @@
 	        var refs = item.refs;
 	        var complete = item.complete;
 	        var notes = item.notes;
+	        var issue = item.issue;
 
 	        return _react2['default'].createElement(
 	          'div',
 	          { key: index + 'brokenlink' },
-	          _react2['default'].createElement(_ChecklistItem2['default'], { link: key, complete: complete, notes: item.notes, refs: refs })
+	          _react2['default'].createElement(_ChecklistItem2['default'], { link: key, complete: complete, notes: item.notes, refs: refs, issue: issue })
 	        );
 	      };
 
@@ -20707,6 +20708,12 @@
 
 	var _libAPI2 = _interopRequireDefault(_libAPI);
 
+	var colors = {
+	  complete: '#bef2bc',
+	  incomplete: '#edb8b8',
+	  nonissue: '#00b9e7'
+	};
+
 	var ChecklistItem = (function (_Component) {
 	  _inherits(ChecklistItem, _Component);
 
@@ -20715,11 +20722,13 @@
 
 	    var complete = props.complete;
 	    var notes = props.notes;
+	    var issue = props.issue;
 
 	    _get(Object.getPrototypeOf(ChecklistItem.prototype), 'constructor', this).call(this);
 	    this.state = {
 	      complete: complete !== undefined && complete === 'true' ? true : false,
 	      editing: false,
+	      issue: issue !== undefined && issue === 'false' ? false : true,
 	      notes: notes !== undefined ? notes : ''
 	    };
 	  }
@@ -20754,19 +20763,41 @@
 	          );
 	        }
 	      };
+
 	      var style = {
 	        position: 'relative',
 	        margin: '0 0 5px 0',
 	        padding: '1em',
-	        background: this.state.complete ? '#bef2bc' : '#edb8b8',
+	        background: this.state.complete ? colors.complete : colors.incomplete,
 	        overflowX: 'auto'
 	      };
+
+	      if (!this.state.issue) {
+	        style.background = colors.nonissue;
+	      }
+
 	      return _react2['default'].createElement(
 	        'div',
 	        { style: style },
-	        _react2['default'].createElement('input', { type: 'checkbox', onChange: this._handleToggleCheckbox.bind(this), checked: this.state.complete }),
 	        _react2['default'].createElement(
-	          'label',
+	          'div',
+	          null,
+	          _react2['default'].createElement('input', { type: 'checkbox', onChange: this._toggleIssue.bind(this), checked: this.state.complete }),
+	          _react2['default'].createElement(
+	            'label',
+	            null,
+	            'Resolved'
+	          ),
+	          '   ',
+	          _react2['default'].createElement('input', { type: 'checkbox', onChange: this._toggleIssue.bind(this), checked: !this.state.issue }),
+	          _react2['default'].createElement(
+	            'label',
+	            null,
+	            'Not an issue'
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'h2',
 	          null,
 	          link
 	        ),
@@ -20822,6 +20853,14 @@
 	          'Add notes'
 	        );
 	      }
+	    }
+	  }, {
+	    key: '_toggleIssue',
+	    value: function _toggleIssue(e) {
+	      var issue = e.target.checked;
+	      this.setState({ issue: !this.state.issue }, function () {
+	        _libAPI2['default'].updateItem({ index: this.props.link, item: { issue: this.state.issue } });
+	      });
 	    }
 	  }, {
 	    key: '_handleToggleCheckbox',
