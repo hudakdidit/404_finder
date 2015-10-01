@@ -6,7 +6,7 @@ export default class ChecklistItem extends Component {
     const {complete, notes} = props;
     super();
     this.state = {
-      completed: (complete !== undefined ? complete : false),
+      complete: (complete !== undefined || complete === 'true' ? true : false),
       editing: false,
       notes: (notes !== undefined ? notes : '')
     }
@@ -42,12 +42,14 @@ export default class ChecklistItem extends Component {
 
   _notes() {
     if(this.state.editing) {
+      let style = {width: '100%', height: '150px', padding: '10px'};
       return (<div>
-        <textarea value={this.state.notes} onChange={this._updateNotes.bind(this)} initialValue={this.state.notes} />
+        <textarea style={style} value={this.state.notes} onChange={this._updateNotes.bind(this)} initialValue={this.state.notes} />
         <button onClick={this._saveNotes.bind(this)}>Save</button>
         </div>);
     } else if(this.state.notes !== '') {
-      return <div><strong>Notes:</strong><div>{this.state.notes}</div>
+      
+      return <div onDoubleClick={this._toggleEditing.bind(this)}><strong>Notes:</strong><div>{this.state.notes}</div>
       <button onClick={this._toggleEditing.bind(this)}>edit</button><button onClick={this._deleteNote.bind(this)}>&#215;</button></div>;
     } else {
       return <button onClick={this._toggleEditing.bind(this)}>Add notes</button>;

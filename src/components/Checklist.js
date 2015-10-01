@@ -3,19 +3,21 @@ import ChecklistItem from './ChecklistItem';
 
 export default class Checklist extends Component {
   render() {
-    const {items} = this.props;
+    const {items, total, complete} = this.props;
     const keys = Object.keys(this.props.items);
     const createItem = function(key, index) {
       const item = items[key];
-      const {refs, completed, notes} = item;
+      const {refs, complete, notes} = item;
       return (
         <div key={index + 'brokenlink'}>
-          <ChecklistItem link={key} completed={completed} notes={item.notes} refs={refs}/> 
+          <ChecklistItem link={key} complete={complete} notes={item.notes} refs={refs}/> 
         </div>
       );
     }
     return (
       <div>
+        <h1>404 Errors: {complete} of {total} resolved.</h1>
+        <p>{total - complete} left to resolve.</p>
         {keys.map(createItem)}
       </div>
     );

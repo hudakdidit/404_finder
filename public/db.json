@@ -3,29 +3,33 @@
 		"refs": [
 			"https://www.ctl.io/"
 		],
-		"notes": "a note about another thing",
-		"complete": "false"
+		"notes": "a note about another thing!!!",
+		"complete": "true"
 	},
 	"https://www.ctl.io/assets/images/loading.svg": {
 		"refs": [
 			"https://www.ctl.io/assets/css/main.css"
 		],
-		"notes": "this thing has a note"
+		"notes": "this thing has a note",
+		"complete": "true"
 	},
 	"https://www.ctl.io/knowledge-base/network/centurylink-cloud-ids-idp-platform-faq/%20/": {
 		"refs": [
 			"https://www.ctl.io/knowledge-base/network/centurylink-cloud-ids-idp-platform-faq/%20"
-		]
+		],
+		"complete": "true"
 	},
 	"https://www.ctl.io/blog/post/why-reliable-cloud-performance-matters/&quot;https:/twitter.com/rseroter&quot;&gt;Richard/": {
 		"refs": [
 			"https://www.ctl.io/blog/post/why-reliable-cloud-performance-matters/&quot;https:/twitter.com/rseroter&quot;&gt;Richard"
-		]
+		],
+		"complete": "true"
 	},
 	"https://www.ctl.io/knowledge-base/network/network-access-options-for-connecting-to-centurylink-clouds-platform/%29,/": {
 		"refs": [
 			"https://www.ctl.io/knowledge-base/network/network-access-options-for-connecting-to-centurylink-clouds-platform/%29,"
-		]
+		],
+		"complete": "true"
 	},
 	"https://www.ctl.io/blog/post/load-balancing-high-availability-and-disaster-recovery-what-they-are/&quot;https:/twitter.com/rseroter&quot;&gt;Richard/": {
 		"refs": [

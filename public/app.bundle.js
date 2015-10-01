@@ -20475,6 +20475,10 @@
 
 	var _libChecklistActions2 = _interopRequireDefault(_libChecklistActions);
 
+	var _objectAssign = __webpack_require__(176);
+
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+
 	var App = (function (_Component) {
 	  _inherits(App, _Component);
 
@@ -20483,15 +20487,15 @@
 
 	    _get(Object.getPrototypeOf(App.prototype), 'constructor', this).call(this);
 	    _libChecklistActions2['default'].updateItems(props.initialDB);
-	    this.state = {
-	      items: _libChecklistStore2['default'].getState().items
-	    };
+	    var store = _libChecklistStore2['default'].getState();
+	    var state = (0, _objectAssign2['default'])(store, this._getStats(store));
+	    this.state = state;
 	  }
 
 	  _createClass(App, [{
 	    key: 'render',
 	    value: function render() {
-	      return _react2['default'].createElement(_Checklist2['default'], { items: this.state.items });
+	      return _react2['default'].createElement(_Checklist2['default'], this.state);
 	    }
 	  }, {
 	    key: 'componentDidMount',
@@ -20506,8 +20510,24 @@
 	  }, {
 	    key: '_onChange',
 	    value: function _onChange(state) {
-	      // this.setState(state);
-	      console.log(state, this);
+	      this.setState((0, _objectAssign2['default'])(state, this._getStats(state)));
+	    }
+	  }, {
+	    key: '_getStats',
+	    value: function _getStats(state) {
+	      var links = Object.keys(state.items);
+	      var total = links.length;
+	      var complete = 0;
+	      links.map(function (link) {
+	        if (state.items[link].complete === 'true') {
+	          complete++;
+	        }
+	      });
+
+	      return {
+	        total: total,
+	        complete: complete
+	      };
 	    }
 	  }]);
 
@@ -20557,24 +20577,42 @@
 	  _createClass(Checklist, [{
 	    key: 'render',
 	    value: function render() {
-	      var items = this.props.items;
+	      var _props = this.props;
+	      var items = _props.items;
+	      var total = _props.total;
+	      var complete = _props.complete;
 
 	      var keys = Object.keys(this.props.items);
 	      var createItem = function createItem(key, index) {
 	        var item = items[key];
 	        var refs = item.refs;
-	        var completed = item.completed;
+	        var complete = item.complete;
 	        var notes = item.notes;
 
 	        return _react2['default'].createElement(
 	          'div',
 	          { key: index + 'brokenlink' },
-	          _react2['default'].createElement(_ChecklistItem2['default'], { link: key, completed: completed, notes: item.notes, refs: refs })
+	          _react2['default'].createElement(_ChecklistItem2['default'], { link: key, complete: complete, notes: item.notes, refs: refs })
 	        );
 	      };
 	      return _react2['default'].createElement(
 	        'div',
 	        null,
+	        _react2['default'].createElement(
+	          'h1',
+	          null,
+	          '404 Errors: ',
+	          complete,
+	          ' of ',
+	          total,
+	          ' resolved.'
+	        ),
+	        _react2['default'].createElement(
+	          'p',
+	          null,
+	          total - complete,
+	          ' left to resolve.'
+	        ),
 	        keys.map(createItem)
 	      );
 	    }
@@ -20625,7 +20663,7 @@
 
 	    _get(Object.getPrototypeOf(ChecklistItem.prototype), 'constructor', this).call(this);
 	    this.state = {
-	      completed: complete !== undefined ? complete : false,
+	      complete: complete !== undefined || complete === 'true' ? true : false,
 	      editing: false,
 	      notes: notes !== undefined ? notes : ''
 	    };
@@ -20684,10 +20722,11 @@
 	    key: '_notes',
 	    value: function _notes() {
 	      if (this.state.editing) {
+	        var style = { width: '100%', height: '150px', padding: '10px' };
 	        return _react2['default'].createElement(
 	          'div',
 	          null,
-	          _react2['default'].createElement('textarea', { value: this.state.notes, onChange: this._updateNotes.bind(this), initialValue: this.state.notes }),
+	          _react2['default'].createElement('textarea', { style: style, value: this.state.notes, onChange: this._updateNotes.bind(this), initialValue: this.state.notes }),
 	          _react2['default'].createElement(
 	            'button',
 	            { onClick: this._saveNotes.bind(this) },
@@ -20695,9 +20734,10 @@
 	          )
 	        );
 	      } else if (this.state.notes !== '') {
+
 	        return _react2['default'].createElement(
 	          'div',
-	          null,
+	          { onDoubleClick: this._toggleEditing.bind(this) },
 	          _react2['default'].createElement(
 	            'strong',
 	            null,
