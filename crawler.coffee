@@ -18,7 +18,7 @@ SiteCrawler =
     @errorsObj = {}
     @startTimer()
     @errors = 0
-    @createLogFile(@startCrawler.bind(@))
+    @startCrawler()
 
   startTimer: ->
     @duration = 1
@@ -50,9 +50,6 @@ SiteCrawler =
     @addError
       url: url
       ref: ref
-
-    fs.appendFile @current_logfile, "#{status} Error\nResource: #{url}\nReferrer: #{ref} \n\n", (err) =>
-      throw err if err if err isnt null
 
   addError: (params) ->
     if @errorsObj[params.url]?

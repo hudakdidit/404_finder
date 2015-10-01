@@ -16,6 +16,10 @@ var dev = function() {
   });
 }
 
+var crawl = function() {
+  crawler.init();
+}
+
 
 switch(command) {
   case 'dev':
@@ -23,6 +27,9 @@ switch(command) {
     break;
   case 'dev-crawl': 
     server();
+    crawler.init();
+    break;
+  case 'crawl': 
     crawler.init();
     break;
 }
