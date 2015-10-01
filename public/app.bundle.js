@@ -20476,7 +20476,7 @@
 
 	var _Checklist2 = _interopRequireDefault(_Checklist);
 
-	var _libChecklistStore = __webpack_require__(175);
+	var _libChecklistStore = __webpack_require__(176);
 
 	var _libChecklistStore2 = _interopRequireDefault(_libChecklistStore);
 
@@ -20484,7 +20484,7 @@
 
 	var _libChecklistActions2 = _interopRequireDefault(_libChecklistActions);
 
-	var _objectAssign = __webpack_require__(176);
+	var _objectAssign = __webpack_require__(177);
 
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
@@ -20574,7 +20574,7 @@
 
 	var _ChecklistItem2 = _interopRequireDefault(_ChecklistItem);
 
-	var _ChecklistSearch = __webpack_require__(177);
+	var _ChecklistSearch = __webpack_require__(175);
 
 	var _ChecklistSearch2 = _interopRequireDefault(_ChecklistSearch);
 
@@ -22470,136 +22470,6 @@
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _alt = __webpack_require__(162);
-
-	var _alt2 = _interopRequireDefault(_alt);
-
-	var _ChecklistActions = __webpack_require__(161);
-
-	var _ChecklistActions2 = _interopRequireDefault(_ChecklistActions);
-
-	var _objectAssign = __webpack_require__(176);
-
-	var _objectAssign2 = _interopRequireDefault(_objectAssign);
-
-	var ChecklistStore = (function () {
-	  function ChecklistStore() {
-	    _classCallCheck(this, ChecklistStore);
-
-	    this.search = false;
-	    this.query = '';
-	    this.results = {};
-	    this.items = {};
-	    this.bindListeners({
-	      handleUpdateItem: _ChecklistActions2['default'].UPDATE_ITEM,
-	      handleUpdateItems: _ChecklistActions2['default'].UPDATE_ITEMS,
-	      filterItems: _ChecklistActions2['default'].FILTER_ITEMS
-	    });
-	  }
-
-	  _createClass(ChecklistStore, [{
-	    key: 'handleUpdateItem',
-	    value: function handleUpdateItem(obj) {
-	      var item = this.items[obj.index];
-	      item = (0, _objectAssign2['default'])(item, obj.item);
-	    }
-	  }, {
-	    key: 'handleUpdateItems',
-	    value: function handleUpdateItems(items) {
-	      this.items = items;
-	    }
-	  }, {
-	    key: 'filterItems',
-	    value: function filterItems(search) {
-	      var _this = this;
-
-	      if (search === '') {
-	        this.search = false;
-	      } else {
-	        (function () {
-	          var results = {};
-	          var foundUrls = Object.keys(_this.items).filter(function (url) {
-	            return url.indexOf(search) > -1;
-	          });
-	          foundUrls.map(function (url) {
-	            return results[url] = _this.items[url];
-	          });
-	          _this.query = search;
-	          _this.search = true;
-	          _this.results = results;
-	        })();
-	      }
-	    }
-	  }]);
-
-	  return ChecklistStore;
-	})();
-
-	exports['default'] = ChecklistStore;
-	exports['default'] = _alt2['default'].createStore(ChecklistStore, 'ChecklistStore');
-	module.exports = exports['default'];
-
-/***/ },
-/* 176 */
-/***/ function(module, exports) {
-
-	/* eslint-disable no-unused-vars */
-	'use strict';
-	var hasOwnProperty = Object.prototype.hasOwnProperty;
-	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-	function toObject(val) {
-		if (val === null || val === undefined) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
-	}
-
-	module.exports = Object.assign || function (target, source) {
-		var from;
-		var to = toObject(target);
-		var symbols;
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = Object(arguments[s]);
-
-			for (var key in from) {
-				if (hasOwnProperty.call(from, key)) {
-					to[key] = from[key];
-				}
-			}
-
-			if (Object.getOwnPropertySymbols) {
-				symbols = Object.getOwnPropertySymbols(from);
-				for (var i = 0; i < symbols.length; i++) {
-					if (propIsEnumerable.call(from, symbols[i])) {
-						to[symbols[i]] = from[symbols[i]];
-					}
-				}
-			}
-		}
-
-		return to;
-	};
-
-
-/***/ },
-/* 177 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -22666,6 +22536,136 @@
 
 	exports['default'] = ChecklistSearch;
 	module.exports = exports['default'];
+
+/***/ },
+/* 176 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _alt = __webpack_require__(162);
+
+	var _alt2 = _interopRequireDefault(_alt);
+
+	var _ChecklistActions = __webpack_require__(161);
+
+	var _ChecklistActions2 = _interopRequireDefault(_ChecklistActions);
+
+	var _objectAssign = __webpack_require__(177);
+
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+
+	var ChecklistStore = (function () {
+	  function ChecklistStore() {
+	    _classCallCheck(this, ChecklistStore);
+
+	    this.search = false;
+	    this.query = '';
+	    this.results = {};
+	    this.items = {};
+	    this.bindListeners({
+	      handleUpdateItem: _ChecklistActions2['default'].UPDATE_ITEM,
+	      handleUpdateItems: _ChecklistActions2['default'].UPDATE_ITEMS,
+	      filterItems: _ChecklistActions2['default'].FILTER_ITEMS
+	    });
+	  }
+
+	  _createClass(ChecklistStore, [{
+	    key: 'handleUpdateItem',
+	    value: function handleUpdateItem(obj) {
+	      var item = this.items[obj.index];
+	      item = (0, _objectAssign2['default'])(item, obj.item);
+	    }
+	  }, {
+	    key: 'handleUpdateItems',
+	    value: function handleUpdateItems(items) {
+	      this.items = items;
+	    }
+	  }, {
+	    key: 'filterItems',
+	    value: function filterItems(search) {
+	      var _this = this;
+
+	      if (search === '') {
+	        this.search = false;
+	      } else {
+	        (function () {
+	          var results = {};
+	          var foundUrls = Object.keys(_this.items).filter(function (url) {
+	            return url.indexOf(search) > -1;
+	          });
+	          foundUrls.map(function (url) {
+	            return results[url] = _this.items[url];
+	          });
+	          _this.query = search;
+	          _this.search = true;
+	          _this.results = results;
+	        })();
+	      }
+	    }
+	  }]);
+
+	  return ChecklistStore;
+	})();
+
+	exports['default'] = ChecklistStore;
+	exports['default'] = _alt2['default'].createStore(ChecklistStore, 'ChecklistStore');
+	module.exports = exports['default'];
+
+/***/ },
+/* 177 */
+/***/ function(module, exports) {
+
+	/* eslint-disable no-unused-vars */
+	'use strict';
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+
+		return to;
+	};
+
 
 /***/ }
 /******/ ]);

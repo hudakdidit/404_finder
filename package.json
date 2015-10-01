@@ -3,13 +3,16 @@
   "version": "0.0.1",
   "description": "Craw a website and log any errors",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:hudakdidit/site_crawler.git"
+  },
   "scripts": {
     "start": "node index dev",
     "dev": "node index dev",
     "dev-crawl": "node index dev-crawl",
     "crawl": "node index crawl",
-    "server": "node index server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "node index server"
   },
   "author": "hudakdidit",
   "license": "MIT",

@@ -15,7 +15,6 @@ config       = require('./lib/parseConfig')()
 SiteCrawler =
   remaining: null
   init: ->
-    console.log(config)
     @errorsObj = {}
     @startTimer()
     @errors = 0

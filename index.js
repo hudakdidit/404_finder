@@ -26,11 +26,14 @@ switch(command) {
     dev();
     break;
   case 'dev-crawl': 
-    server();
+    dev();
     crawler.init();
     break;
   case 'crawl': 
     crawler.init();
+    break;
+  case 'server': 
+    server();
     break;
 }
 
