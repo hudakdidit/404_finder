@@ -12,7 +12,7 @@ A tool to crawl a site and log any resources that return a 404. Results are pres
 
 ## Notes
 
-Subsequent runs of the crawler on the same site will obviously capture fresh data if it exists. If a url marked as resolved in the original database is found in the new crawl, that item will be unchecked and flagged as reopened.
+TODO
 
 
 ## Tasks
