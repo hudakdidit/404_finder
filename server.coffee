@@ -43,13 +43,18 @@ writeDB = (db, cb) ->
     cb()
 
 readDB = ->
-  crawl_data = require __dirname + "/log/#{name}.json"
-  fs.exists __dirname + "/public/#{name}_db.json", (exists) ->
+  fs.exists __dirname + "/log/#{name}.json", (exists) ->
     if exists
-      db = require __dirname + "/public/#{name}_db.json"
-      checkUpdate(crawl_data, db, startServer)
+      crawl_data = require __dirname + "/log/#{name}.json"
+      fs.exists __dirname + "/public/#{name}_db.json", (exists) ->
+        if exists
+          db = require __dirname + "/public/#{name}_db.json"
+          checkUpdate(crawl_data, db, startServer)
+        else
+          writeDB crawl_data, startServer
     else
-      writeDB crawl_data, startServer
+      throw Error "#{__dirname}/log/#{name}.json doesn't exist. Run `npm run crawl` to build."
+      process.exit(1)
 
 checkUpdate = (crawled, db, cb) ->
   _.mapKeys crawled, (url, val) ->

@@ -47,7 +47,7 @@ export default class ChecklistItem extends Component {
     return (
       <div style={style}>
         <div>
-          <input type="checkbox" onChange={this._toggleIssue.bind(this)} checked={this.state.complete}/>
+          <input type="checkbox" onChange={this._handleToggleCheckbox.bind(this)} checked={this.state.complete}/>
           <label>Resolved</label>
           &nbsp;&nbsp;&nbsp;
           <input type="checkbox" onChange={this._toggleIssue.bind(this)} checked={!this.state.issue}/>

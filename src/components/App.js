@@ -34,7 +34,8 @@ export default class App extends Component {
     const total = links.length;
     let complete = 0;
     links.map( function(link){
-      if(state.items[link].complete === 'true'){
+      const item = state.items[link]
+      if(item.complete === 'true' || item.issue === 'false'){
         complete++
       }
     });

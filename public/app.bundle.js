@@ -20528,7 +20528,8 @@
 	      var total = links.length;
 	      var complete = 0;
 	      links.map(function (link) {
-	        if (state.items[link].complete === 'true') {
+	        var item = state.items[link];
+	        if (item.complete === 'true' || item.issue === 'false') {
 	          complete++;
 	        }
 	      });
@@ -20782,7 +20783,7 @@
 	        _react2['default'].createElement(
 	          'div',
 	          null,
-	          _react2['default'].createElement('input', { type: 'checkbox', onChange: this._toggleIssue.bind(this), checked: this.state.complete }),
+	          _react2['default'].createElement('input', { type: 'checkbox', onChange: this._handleToggleCheckbox.bind(this), checked: this.state.complete }),
 	          _react2['default'].createElement(
 	            'label',
 	            null,
