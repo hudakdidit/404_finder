@@ -1,4 +1,4 @@
-# Website Crawler
+# 404 Finder Tool
 
 A tool to crawl a site and log any resources that return a 404. Results are presented with a searchable todo-style checklist.
 
